@@ -1,54 +1,94 @@
 import Axios from 'axios';
 import * as cheerio from 'cheerio';
-
-enum Rating{
-    NOT_RATED = "Not Rated",
-    GENERAL_AUDIENCES = "General Audiences",
-    TEEN_AND_UP_AUDIENCES = "Teen And Up Audiences",
-    MATURE = "Mature",
-    EXPLICIT = "Explicit",
-}
+import { Author } from '../author/author';
+import { Href } from '../utils/href';
+import { getHrefsFromElement } from '../utils/utils';
 
 class FanficWork{
 
     public workId: number;
-    public chapterId: number;
 
     public rating: Rating;
-    public fandom: string;
-    public relationships: string[] = [];
+    public archive_warnings: ArchiveWarning[] = [];
+    public categories: Href[] = [];
+    public fandom: Href[] = [];
+    public relationships: Href[] = [];
+    public characters: Href[] = [];
+    public additionalTags: Href[] = [];
+    public language: string;
 
-    constructor(workId: number, chapterId?: number){
+    public published: string;
+    public words: number;
+    public chapters: number;
+    public maxChapters: number|undefined;
+    public commentsCount: number;
+    public kudosCount: number;
+    public hitsCount: number;
+    public bookmarksCount: number = 0;
+
+    public title: string;
+    public author: Href;
+    public summary: string;
+    public notes: string[] = [];
+
+    constructor(workId: number){
         this.workId = workId;
     }
 
     public async fetch(): Promise<FanficWork|undefined>{
         let url = `https://archiveofourown.org/works/${this.workId}/`;
-        if(this.chapterId){
-            url += `chapters/${this.chapterId}/`
-        }
         const html = await Axios.get(url, {
             headers: {
                 cookie: 'view_adult=true;'
             }
         });
         if(html.status !== 200){
-            return 
+            return;
         }
         const $ = cheerio.load(html.data);
+
         this.rating = $("dd.rating").text().trim() as Rating
-        this.fandom = $("dd.fandom").text().trim();
-        // todo figure out this PIECE OF SHIT
-        // @ts-ignore
-        const relationships = $("dd.relationship").toArray()[0].children[1].children;
-        for(const relationship of relationships){
-            if(relationship.name !== "li") continue;
-            this.relationships.push(relationship.children[0].children[0].data);
+        this.archive_warnings = getHrefsFromElement($, $("dd.warning")).map(href => {
+            return href.name as ArchiveWarning;
+        });
+        this.categories = getHrefsFromElement($, $('dd.category'));
+        this.fandom = getHrefsFromElement($, $('dd.fandom'));
+        this.relationships = getHrefsFromElement($, $('dd.relationship'));
+        this.characters = getHrefsFromElement($, $('dd.character'))
+        this.additionalTags = getHrefsFromElement($, $('dd.freeform'))
+
+        this.published = $('dd.published').text().trim();
+        this.words = parseInt($('dd.words').text().trim());
+        
+        const [chapter, maxChapters] = $("dd.chapters").text().trim().split("/").map(value => {
+            return value !== "?" ? parseInt(value) : undefined
+        })
+
+        this.chapters = chapter!;
+        this.maxChapters = maxChapters;
+        this.commentsCount = parseInt($('dd.comments').text().trim());
+        this.kudosCount = parseInt($('dd.kudos').text().trim());
+        this.hitsCount = parseInt($('dd.hits').text().trim())
+        if($("dd.bookmarks").length !== 0){
+            this.bookmarksCount = parseInt($('dd.bookmarks').text().trim());
         }
+
+        this.title = $('h2.title').text().trim();
+
+        const author = $('a[rel="author"]');
+        this.author = {
+            name: author.text().trim(),
+            href: "https://archiveofourown.org" + author.attr('href')!
+        }
+
+        this.notes = [
+            $('div[class="notes module"]').children("blockquote.userstuff").children("p").text().trim(),
+            $('div[class="end notes module"]').children("blockquote.userstuff").children("p").text().trim(),
+        ]
         return this;
     }
 }
 
-export async function getWorkFromId(workId: number, chapterId?: number): Promise<FanficWork|undefined>{
-    return await (new FanficWork(workId, chapterId)).fetch();
+export async function getWorkFromId(workId: number): Promise<FanficWork|undefined>{
+    return await (new FanficWork(workId)).fetch();
 }
