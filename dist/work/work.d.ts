@@ -1,7 +1,9 @@
+import { ArchiveWarning, Rating, WorkProgress } from '../utils/enum';
 import { Href } from '../utils/href';
-declare class FanficWork {
+export declare class FanficWork {
     workId: number;
     rating: Rating;
+    status: WorkProgress;
     archive_warnings: ArchiveWarning[];
     categories: Href[];
     fandom: Href[];
@@ -25,4 +27,3 @@ declare class FanficWork {
     fetch(): Promise<FanficWork | undefined>;
 }
 export declare function getWorkFromId(workId: number): Promise<FanficWork | undefined>;
-export {};

@@ -1,4 +1,4 @@
-export interface Href{
+export interface Href {
     name: string;
     href: string;
 }

@@ -10,7 +10,9 @@
     "/dist"
   ],
   "scripts": {
-    "test": "jest --detectOpenHandles"
+    "test": "jest --detectOpenHandles",
+    "pretty": "prettier --write src/**/*.ts",
+    "build": "npx tsc"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",

@@ -1,2 +1,1 @@
-export declare class Author {
-}
+export declare function getAuthorByName(username: string): void;

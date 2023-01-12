@@ -9,12 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getWorkFromId = void 0;
+exports.getWorkFromId = exports.FanficWork = void 0;
 const axios_1 = require("axios");
 const cheerio = require("cheerio");
+const enum_1 = require("../utils/enum");
 const utils_1 = require("../utils/utils");
 class FanficWork {
     constructor(workId) {
+        this.status = enum_1.WorkProgress.NONE;
         this.archive_warnings = [];
         this.categories = [];
         this.fandom = [];
@@ -61,10 +63,7 @@ class FanficWork {
             }
             this.title = $('h2.title').text().trim();
             const author = $('a[rel="author"]');
-            this.author = {
-                name: author.text().trim(),
-                href: "https://archiveofourown.org" + author.attr('href')
-            };
+            this.author = (0, utils_1.getHrefFromElement)($('a[rel="author"]'));
             this.notes = [
                 $('div[class="notes module"]').children("blockquote.userstuff").children("p").text().trim(),
                 $('div[class="end notes module"]').children("blockquote.userstuff").children("p").text().trim(),
@@ -73,6 +72,7 @@ class FanficWork {
         });
     }
 }
+exports.FanficWork = FanficWork;
 function getWorkFromId(workId) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield (new FanficWork(workId)).fetch();
