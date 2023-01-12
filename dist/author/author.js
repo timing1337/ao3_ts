@@ -33,6 +33,5 @@ class Author {
         });
     }
 }
-function getAuthorByName(username) {
-}
+function getAuthorByName(username) { }
 exports.getAuthorByName = getAuthorByName;

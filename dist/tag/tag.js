@@ -59,7 +59,7 @@ class TagInformation {
             //this gonna be wilddddd
             for (let i = 0; i < workIndexGroup.length; i++) {
                 const children = $(workIndexGroup[i]);
-                const fanfic = new work_1.FanficWork(parseInt(children.attr("id").slice(5)));
+                const fanfic = new work_1.FanficWork(parseInt(children.attr('id').slice(5)));
                 //header module
                 const headerModule = children.children(`div[class="header module"]`);
                 fanfic.title = headerModule.children(`h4[class="heading"]`).text().trim().split('\n')[0]; //ulgy...
@@ -76,10 +76,14 @@ class TagInformation {
                 //ignore archive warnings, its in tag module
                 const requiredTags = headerModule.children(`ul[class="required-tags"]`).children();
                 fanfic.rating = $(requiredTags[0]).text().trim();
-                fanfic.categories = $(requiredTags[2]).text().trim().split(", ").map(category => {
+                fanfic.categories = $(requiredTags[2])
+                    .text()
+                    .trim()
+                    .split(', ')
+                    .map((category) => {
                     return {
                         name: category,
-                        href: `https://archiveofourown.org/tags/${category.replace("/", "*s*")}/works`
+                        href: `https://archiveofourown.org/tags/${category.replace('/', '*s*')}/works`
                     };
                 });
                 fanfic.status = $(requiredTags[3]).text().trim();
@@ -88,14 +92,14 @@ class TagInformation {
                 const tagsModule = children.children(`ul[class="tags commas"]`).children();
                 for (let i = 0; i < tagsModule.length; i++) {
                     const tag = $(tagsModule[i]);
-                    switch (tag.attr("class")) {
-                        case "warnings":
+                    switch (tag.attr('class')) {
+                        case 'warnings':
                             fanfic.archive_warnings.push(tag.text().trim());
                             break;
-                        case "relationships":
+                        case 'relationships':
                             fanfic.relationships.push((0, utils_1.getHrefFromElement)(tag.children(`a[class="tag"]`)));
                             break;
-                        case "characters":
+                        case 'characters':
                             fanfic.characters.push((0, utils_1.getHrefFromElement)(tag.children(`a[class="tag"]`)));
                             break;
                         default:
@@ -111,15 +115,20 @@ class TagInformation {
                 }
                 const stats = children.children(`dl[class="stats"]`);
                 fanfic.words = parseInt(stats.children('dd.words').text().trim());
-                const [chapter, maxChapters] = stats.children("dd.chapters").text().trim().split("/").map(value => {
-                    return value !== "?" ? parseInt(value) : undefined;
+                const [chapter, maxChapters] = stats
+                    .children('dd.chapters')
+                    .text()
+                    .trim()
+                    .split('/')
+                    .map((value) => {
+                    return value !== '?' ? parseInt(value) : undefined;
                 });
                 fanfic.chapters = chapter;
                 fanfic.maxChapters = maxChapters;
                 fanfic.commentsCount = parseInt(stats.children('dd.comments').text().trim());
                 fanfic.kudosCount = parseInt(stats.children('dd.kudos').text().trim());
                 fanfic.hitsCount = parseInt(stats.children('dd.hits').text().trim());
-                if (stats.children("dd.bookmarks").length !== 0) {
+                if (stats.children('dd.bookmarks').length !== 0) {
                     fanfic.bookmarksCount = parseInt(stats.children('dd.bookmarks').text().trim());
                 }
                 fanfics.push(fanfic);
@@ -131,13 +140,13 @@ class TagInformation {
 exports.TagInformation = TagInformation;
 function getTagInformation(tag) {
     return __awaiter(this, void 0, void 0, function* () {
-        return (new TagInformation(tag)).fetch();
+        return new TagInformation(tag).fetch();
     });
 }
 exports.getTagInformation = getTagInformation;
 function getRelatedWorks(tag, page = 1) {
     return __awaiter(this, void 0, void 0, function* () {
-        return (new TagInformation(tag)).getRelatedWorks(page);
+        return new TagInformation(tag).getRelatedWorks(page);
     });
 }
 exports.getRelatedWorks = getRelatedWorks;

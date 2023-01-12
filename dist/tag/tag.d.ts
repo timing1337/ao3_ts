@@ -1,5 +1,5 @@
-import { FanficWork } from "../work/work";
-import { Href } from "../utils/href";
+import { FanficWork } from '../work/work';
+import { Href } from '../utils/href';
 export declare class TagInformation {
     tagName: string;
     parentTags: Href[];
