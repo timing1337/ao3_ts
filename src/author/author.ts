@@ -14,16 +14,18 @@ class Author {
     }
 
     public async fetch(): Promise<Author | undefined> {
-        let url = `https://archiveofourown.org/users/${this.name}/`;
-        const html = await Axios.get(url, {
-            headers: {
-                cookie: 'view_adult=true;'
+        try {
+            let url = `https://archiveofourown.org/users/${this.name}/`;
+            const html = await Axios.get(url, {
+                headers: {
+                    cookie: 'view_adult=true;'
+                }
+            });
+            if (html.status !== 200) {
+                return;
             }
-        });
-        if (html.status !== 200) {
-            return;
-        }
-        const $ = cheerio.load(html.data);
+            const $ = cheerio.load(html.data);
+        } catch (ex) {}
         return this;
     }
 }
