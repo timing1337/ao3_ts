@@ -23,6 +23,9 @@ class FanficWork {
         this.relationships = [];
         this.characters = [];
         this.additionalTags = [];
+        this.commentsCount = 0;
+        this.kudosCount = 0;
+        this.hitsCount = 0;
         this.bookmarksCount = 0;
         this.notes = [];
         this.workId = workId;
@@ -60,9 +63,15 @@ class FanficWork {
                 });
                 this.chapters = chapter;
                 this.maxChapters = maxChapters;
-                this.commentsCount = parseInt($('dd.comments').text().trim());
-                this.kudosCount = parseInt($('dd.kudos').text().trim());
-                this.hitsCount = parseInt($('dd.hits').text().trim());
+                if ($('dd.comments').length !== 0) {
+                    this.commentsCount = parseInt($('dd.comments').text().trim());
+                }
+                if ($('dd.kudos').length !== 0) {
+                    this.kudosCount = parseInt($('dd.kudos').text().trim());
+                }
+                if ($('dd.hits').length !== 0) {
+                    this.hitsCount = parseInt($('dd.hits').text().trim());
+                }
                 if ($('dd.bookmarks').length !== 0) {
                     this.bookmarksCount = parseInt($('dd.bookmarks').text().trim());
                 }

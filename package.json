@@ -12,8 +12,7 @@
   "scripts": {
     "test": "jest --detectOpenHandles --silent=false --watch --verbose false",
     "pretty": "prettier --write src/**/*.ts",
-    "build": "npx tsc",
-    "install": "npm run build"
+    "build": "npx tsc"
   },
   "devDependencies": {
     "jest": "^29.3.1",
