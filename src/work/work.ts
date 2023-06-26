@@ -21,9 +21,9 @@ export class FanficWork {
     public words: number;
     public chapters: number;
     public maxChapters: number | undefined;
-    public commentsCount: number;
-    public kudosCount: number;
-    public hitsCount: number;
+    public commentsCount: number = 0;
+    public kudosCount: number = 0;
+    public hitsCount: number = 0;
     public bookmarksCount: number = 0;
 
     public title: string;
@@ -73,9 +73,16 @@ export class FanficWork {
 
             this.chapters = chapter!;
             this.maxChapters = maxChapters;
-            this.commentsCount = parseInt($('dd.comments').text().trim());
-            this.kudosCount = parseInt($('dd.kudos').text().trim());
-            this.hitsCount = parseInt($('dd.hits').text().trim());
+
+            if ($('dd.comments').length !== 0) {
+                this.commentsCount = parseInt($('dd.comments').text().trim());
+            }
+            if ($('dd.kudos').length !== 0) {
+                this.kudosCount = parseInt($('dd.kudos').text().trim());
+            }
+            if ($('dd.hits').length !== 0) {
+                this.hitsCount = parseInt($('dd.hits').text().trim());
+            }
             if ($('dd.bookmarks').length !== 0) {
                 this.bookmarksCount = parseInt($('dd.bookmarks').text().trim());
             }

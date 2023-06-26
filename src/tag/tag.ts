@@ -129,9 +129,18 @@ export class TagInformation {
 
                 fanfic.chapters = chapter!;
                 fanfic.maxChapters = maxChapters;
-                fanfic.commentsCount = parseInt(stats.children('dd.comments').text().trim());
-                fanfic.kudosCount = parseInt(stats.children('dd.kudos').text().trim());
-                fanfic.hitsCount = parseInt(stats.children('dd.hits').text().trim());
+                if ($('dd.comments').length !== 0) {
+                    fanfic.commentsCount = parseInt($('dd.comments').text().trim());
+                }
+                if ($('dd.kudos').length !== 0) {
+                    fanfic.kudosCount = parseInt($('dd.kudos').text().trim());
+                }
+                if ($('dd.hits').length !== 0) {
+                    fanfic.hitsCount = parseInt($('dd.hits').text().trim());
+                }
+                if ($('dd.bookmarks').length !== 0) {
+                    fanfic.bookmarksCount = parseInt($('dd.bookmarks').text().trim());
+                }
                 if (stats.children('dd.bookmarks').length !== 0) {
                     fanfic.bookmarksCount = parseInt(stats.children('dd.bookmarks').text().trim());
                 }
