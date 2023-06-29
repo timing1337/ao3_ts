@@ -61,7 +61,7 @@ export class FanficWork {
             this.additionalTags = getHrefsFromElement($, $('dd.freeform'));
 
             this.published = $('dd.published').text().trim();
-            this.words = parseInt($('dd.words').text().trim());
+            this.words = parseInt($('dd.words').text().replaceAll(",", "").trim());
 
             const [chapter, maxChapters] = $('dd.chapters')
                 .text()
@@ -75,16 +75,16 @@ export class FanficWork {
             this.maxChapters = maxChapters;
 
             if ($('dd.comments').length !== 0) {
-                this.commentsCount = parseInt($('dd.comments').text().trim());
+                this.commentsCount = parseInt($('dd.comments').text().replaceAll(",", "").trim());
             }
             if ($('dd.kudos').length !== 0) {
-                this.kudosCount = parseInt($('dd.kudos').text().trim());
+                this.kudosCount = parseInt($('dd.kudos').text().replaceAll(",", "").trim());
             }
             if ($('dd.hits').length !== 0) {
-                this.hitsCount = parseInt($('dd.hits').text().trim());
+                this.hitsCount = parseInt($('dd.hits').text().replaceAll(",", "").trim());
             }
             if ($('dd.bookmarks').length !== 0) {
-                this.bookmarksCount = parseInt($('dd.bookmarks').text().trim());
+                this.bookmarksCount = parseInt($('dd.bookmarks').text().replaceAll(",", "").trim());
             }
 
             this.title = $('h2.title').text().trim();

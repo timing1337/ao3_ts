@@ -116,7 +116,7 @@ export class TagInformation {
 
                 const stats = children.children(`dl[class="stats"]`);
 
-                fanfic.words = parseInt(stats.children('dd.words').text().trim());
+                fanfic.words = parseInt(stats.children('dd.words').text().replaceAll(",", "").trim());
 
                 const [chapter, maxChapters] = stats
                     .children('dd.chapters')
@@ -129,16 +129,16 @@ export class TagInformation {
                 fanfic.chapters = chapter!;
                 fanfic.maxChapters = maxChapters;
                 if (stats.children('dd.comments').length !== 0) {
-                    fanfic.commentsCount = parseInt(stats.children('dd.comments').text().trim());
+                    fanfic.commentsCount = parseInt(stats.children('dd.comments').text().replaceAll(",", "").trim());
                 }
                 if (stats.children('dd.kudos').length !== 0) {
-                    fanfic.kudosCount = parseInt(stats.children('dd.kudos').text().trim());
+                    fanfic.kudosCount = parseInt(stats.children('dd.kudos').text().replaceAll(",", "").trim());
                 }
                 if (stats.children('dd.hits').length !== 0) {
-                    fanfic.hitsCount = parseInt(stats.children('dd.hits').text().trim());
+                    fanfic.hitsCount = parseInt(stats.children('dd.hits').text().replaceAll(",", "").trim());
                 }
                 if (stats.children('dd.bookmarks').length !== 0) {
-                    fanfic.bookmarksCount = parseInt(stats.children('dd.bookmarks').text().trim());
+                    fanfic.bookmarksCount = parseInt(stats.children('dd.bookmarks').text().replaceAll(",", "").trim());
                 }
                 fanfics.push(fanfic);
             }
